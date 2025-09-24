@@ -15,7 +15,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 100%);
             color: #ffffff;
             overflow-x: hidden;
             min-height: 100vh;
@@ -36,7 +36,7 @@
 
         .header h1 {
             font-size: 2.5rem;
-            background: linear-gradient(45deg, #64ffda, #1de9b6);
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -64,30 +64,30 @@
         }
 
         .file-drop-zone {
-            border: 2px dashed #64ffda;
+            border: 2px dashed #00ffff;
             border-radius: 15px;
             padding: 3rem 2rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: rgba(100, 255, 218, 0.05);
+            background: rgba(0, 255, 255, 0.05);
         }
 
         .file-drop-zone:hover {
-            border-color: #1de9b6;
-            background: rgba(100, 255, 218, 0.1);
+            border-color: #ff00ff;
+            background: rgba(0, 255, 255, 0.1);
             transform: translateY(-2px);
         }
 
         .file-drop-zone.drag-over {
-            border-color: #1de9b6;
-            background: rgba(100, 255, 218, 0.15);
+            border-color: #ff00ff;
+            background: rgba(0, 255, 255, 0.15);
         }
 
         .drop-content h3 {
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
-            color: #64ffda;
+            color: #00ffff;
         }
 
         .drop-content p {
@@ -103,13 +103,13 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: linear-gradient(45deg, #64ffda, #1de9b6);
-            color: #0f1419;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            color: #000000;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(100, 255, 218, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.3);
         }
 
         .visualizer-section {
@@ -125,8 +125,9 @@
             height: 500px;
             border-radius: 15px;
             overflow: hidden;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(100, 255, 218, 0.2);
+            background: linear-gradient(135deg, #000000 0%, #1a0033 100%);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: inset 0 0 50px rgba(0, 255, 255, 0.1);
         }
 
         #visualizerCanvas {
@@ -140,7 +141,7 @@
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 1.5rem;
-            border: 1px solid rgba(100, 255, 218, 0.2);
+            border: 1px solid rgba(0, 255, 255, 0.2);
         }
 
         .controls-row {
@@ -165,7 +166,7 @@
         input[type="range"] {
             width: 120px;
             height: 4px;
-            background: rgba(100, 255, 218, 0.2);
+            background: rgba(0, 255, 255, 0.2);
             border-radius: 2px;
             outline: none;
             -webkit-appearance: none;
@@ -175,7 +176,7 @@
             -webkit-appearance: none;
             width: 16px;
             height: 16px;
-            background: #64ffda;
+            background: #00ffff;
             border-radius: 50%;
             cursor: pointer;
         }
@@ -185,8 +186,8 @@
             height: 60px;
             border-radius: 50%;
             border: none;
-            background: linear-gradient(45deg, #64ffda, #1de9b6);
-            color: #0f1419;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            color: #000000;
             font-size: 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -194,7 +195,7 @@
 
         .play-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(100, 255, 218, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 255, 255, 0.3);
         }
 
         .play-btn:disabled {
@@ -207,7 +208,7 @@
             border-radius: 10px;
             padding: 1rem;
             margin-top: 1rem;
-            border: 1px solid rgba(100, 255, 218, 0.2);
+            border: 1px solid rgba(0, 255, 255, 0.2);
         }
 
         .file-details {
@@ -218,7 +219,7 @@
 
         .file-name {
             font-weight: 600;
-            color: #64ffda;
+            color: #00ffff;
         }
 
         .status {
@@ -229,8 +230,8 @@
         }
 
         .status--success {
-            background: rgba(29, 233, 182, 0.2);
-            color: #1de9b6;
+            background: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
         }
 
         .status--error {
@@ -265,7 +266,7 @@
         .freq-bar {
             width: 3px;
             min-height: 2px;
-            background: linear-gradient(to top, #1de9b6, #64ffda);
+            background: linear-gradient(to top, #ff00ff, #00ffff);
             border-radius: 2px;
             transition: height 0.1s ease;
         }
@@ -425,7 +426,8 @@
                 }
 
                 this.scene = new THREE.Scene();
-                this.scene.background = new THREE.Color(0x0f1419);
+                // Changed to a much darker background for better contrast
+                this.scene.background = new THREE.Color(0x000011);
 
                 this.camera = new THREE.PerspectiveCamera(
                     75, 
@@ -449,30 +451,49 @@
             createSphere() {
                 const geometry = new THREE.SphereGeometry(1.5, 64, 32);
                 
+                // Create a more visible material with bright colors
                 const material = new THREE.MeshPhongMaterial({
-                    color: 0x64ffda,
+                    color: 0x00ffff,  // Bright cyan color
                     wireframe: true,
                     transparent: true,
-                    opacity: 0.8
+                    opacity: 0.9,
+                    emissive: 0x004444,  // Add some glow
+                    shininess: 100
                 });
 
                 this.sphere = new THREE.Mesh(geometry, material);
                 this.scene.add(this.sphere);
 
+                // Add a solid inner sphere for better visibility
+                const innerGeometry = new THREE.SphereGeometry(1.2, 32, 16);
+                const innerMaterial = new THREE.MeshPhongMaterial({
+                    color: 0x0066ff,
+                    transparent: true,
+                    opacity: 0.3,
+                    emissive: 0x001133
+                });
+                const innerSphere = new THREE.Mesh(innerGeometry, innerMaterial);
+                this.sphere.add(innerSphere);
+
                 this.originalPositions = [...geometry.attributes.position.array];
             }
 
             setupLighting() {
-                const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+                const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
                 this.scene.add(ambientLight);
 
-                const pointLight = new THREE.PointLight(0x64ffda, 1, 100);
+                // Brighter point lights with vivid colors
+                const pointLight = new THREE.PointLight(0x00ffff, 2, 100);
                 pointLight.position.set(10, 10, 10);
                 this.scene.add(pointLight);
 
-                const pointLight2 = new THREE.PointLight(0x1de9b6, 0.8, 100);
+                const pointLight2 = new THREE.PointLight(0xff00ff, 1.5, 100);
                 pointLight2.position.set(-10, -10, -10);
                 this.scene.add(pointLight2);
+
+                const pointLight3 = new THREE.PointLight(0xffff00, 1.2, 100);
+                pointLight3.position.set(0, 15, -5);
+                this.scene.add(pointLight3);
             }
 
             setupControls() {
@@ -482,7 +503,7 @@
                     this.controls.dampingFactor = 0.05;
                     this.controls.enableZoom = true;
                     this.controls.autoRotate = true;
-                    this.controls.autoRotateSpeed = 0.5;
+                    this.controls.autoRotateSpeed = 0.8;  // Slightly faster rotation
                 }
             }
 
@@ -676,7 +697,7 @@
                     const frequencyIndex = Math.floor((i / positions.count) * this.dataArray.length);
                     const frequency = this.dataArray[frequencyIndex] || 0;
                     
-                    const amplitude = (frequency / 255) * this.sensitivity * 0.3;
+                    const amplitude = (frequency / 255) * this.sensitivity * 0.4;  // Increased amplitude
                     const scaleFactor = 1 + amplitude;
 
                     positions.setXYZ(i, originalX * scaleFactor, originalY * scaleFactor, originalZ * scaleFactor);
@@ -691,13 +712,19 @@
                     this.frequencyBars[i].style.height = height + 'px';
                 }
 
-                // Update sphere color based on average frequency
+                // Update sphere color based on average frequency with more vibrant colors
                 const averageFreq = this.dataArray.reduce((a, b) => a + b, 0) / this.dataArray.length;
                 const intensity = averageFreq / 255;
                 
                 const color = new THREE.Color();
-                color.setHSL(0.5 + intensity * 0.3, 0.8, 0.5 + intensity * 0.3);
+                // Use HSL for more vibrant color transitions
+                color.setHSL(0.5 + intensity * 0.5, 1.0, 0.4 + intensity * 0.4);
                 this.sphere.material.color = color;
+                
+                // Update emissive color for glow effect
+                const emissiveColor = new THREE.Color();
+                emissiveColor.setHSL(0.6 + intensity * 0.4, 0.8, intensity * 0.3);
+                this.sphere.material.emissive = emissiveColor;
             }
 
             animate() {
@@ -710,7 +737,8 @@
                 this.updateVisualization();
                 
                 if (this.sphere) {
-                    this.sphere.rotation.y += 0.002;
+                    this.sphere.rotation.y += 0.003;  // Slightly faster rotation
+                    this.sphere.rotation.x += 0.001;  // Add some X rotation for more dynamic movement
                 }
 
                 this.renderer.render(this.scene, this.camera);
