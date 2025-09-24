@@ -4,291 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Audio Sphere Visualizer</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/controls/OrbitControls.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
-            color: #ffffff;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        .container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header {
-            text-align: center;
-            padding: 2rem 1rem 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(45deg, #64ffda, #1de9b6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            color: #a0a0a0;
-            opacity: 0.8;
-        }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 2rem;
-            gap: 2rem;
-        }
-
-        .upload-section {
-            max-width: 600px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .file-drop-zone {
-            border: 2px dashed #64ffda;
-            border-radius: 15px;
-            padding: 3rem 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(100, 255, 218, 0.05);
-        }
-
-        .file-drop-zone:hover {
-            border-color: #1de9b6;
-            background: rgba(100, 255, 218, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .file-drop-zone.drag-over {
-            border-color: #1de9b6;
-            background: rgba(100, 255, 218, 0.15);
-        }
-
-        .drop-content h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #64ffda;
-        }
-
-        .drop-content p {
-            color: #a0a0a0;
-            margin-bottom: 1.5rem;
-        }
-
-        .btn {
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: linear-gradient(45deg, #64ffda, #1de9b6);
-            color: #0f1419;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(100, 255, 218, 0.3);
-        }
-
-        .visualizer-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            height: 500px;
-            border-radius: 15px;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(100, 255, 218, 0.2);
-        }
-
-        #visualizerCanvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .controls-panel {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 1.5rem;
-            border: 1px solid rgba(100, 255, 218, 0.2);
-        }
-
-        .controls-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .control-group label {
-            color: #a0a0a0;
-            font-size: 0.9rem;
-        }
-
-        input[type="range"] {
-            width: 120px;
-            height: 4px;
-            background: rgba(100, 255, 218, 0.2);
-            border-radius: 2px;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            background: #64ffda;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .play-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: none;
-            background: linear-gradient(45deg, #64ffda, #1de9b6);
-            color: #0f1419;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .play-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(100, 255, 218, 0.3);
-        }
-
-        .play-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .file-info {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 1rem;
-            margin-top: 1rem;
-            border: 1px solid rgba(100, 255, 218, 0.2);
-        }
-
-        .file-details {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .file-name {
-            font-weight: 600;
-            color: #64ffda;
-        }
-
-        .status {
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .status--success {
-            background: rgba(29, 233, 182, 0.2);
-            color: #1de9b6;
-        }
-
-        .status--error {
-            background: rgba(255, 82, 82, 0.2);
-            color: #ff5252;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .error-message {
-            background: rgba(255, 82, 82, 0.1);
-            border: 1px solid rgba(255, 82, 82, 0.3);
-            color: #ff5252;
-            padding: 1rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            text-align: center;
-        }
-
-        .frequency-bars {
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            height: 60px;
-            gap: 2px;
-            margin: 1rem 0;
-            padding: 0 2rem;
-        }
-
-        .freq-bar {
-            width: 3px;
-            min-height: 2px;
-            background: linear-gradient(to top, #1de9b6, #64ffda);
-            border-radius: 2px;
-            transition: height 0.1s ease;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .main-content {
-                padding: 1rem;
-            }
-
-            .controls-row {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .canvas-container {
-                height: 400px;
-            }
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -302,6 +20,11 @@
             <section class="upload-section">
                 <div class="file-drop-zone" id="dropZone">
                     <div class="drop-content">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7,10 12,15 17,10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
                         <h3>Drop your audio file here</h3>
                         <p>Or click to browse</p>
                         <button type="button" class="btn btn--primary" id="fileButton">Choose Audio File</button>
@@ -316,491 +39,117 @@
                 </div>
             </section>
 
-            <!-- Visualizer Section -->
+            <!-- 3D Visualizer Canvas -->
             <section class="visualizer-section">
                 <div class="canvas-container" id="canvasContainer">
                     <canvas id="visualizerCanvas"></canvas>
+                    <div class="loading-indicator hidden" id="loadingIndicator">
+                        <div class="spinner"></div>
+                        <p>Processing audio...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Audio Controls -->
+            <section class="controls-section">
+                <div class="audio-controls" id="audioControls">
+                    <button class="btn btn--secondary control-btn" id="playPauseBtn" disabled>
+                        <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5,3 19,12 5,21"></polygon>
+                        </svg>
+                        <svg class="pause-icon hidden" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="6" y="4" width="4" height="16"></rect>
+                            <rect x="14" y="4" width="4" height="16"></rect>
+                        </svg>
+                    </button>
+                    
+                    <div class="progress-container">
+                        <div class="time-display">
+                            <span id="currentTime">0:00</span>
+                            <span class="time-separator">/</span>
+                            <span id="duration">0:00</span>
+                        </div>
+                        <div class="progress-bar" id="progressBar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="volume-control">
+                        <svg class="volume-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11,5 6,9 2,9 2,15 6,15 11,19 11,5"></polygon>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                        </svg>
+                        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50">
+                    </div>
                 </div>
 
-                <!-- Frequency Bars -->
-                <div class="frequency-bars" id="frequencyBars"></div>
+                <div class="visualization-controls">
+                    <label class="form-label">Visualization Mode:</label>
+                    <select class="form-control visualization-mode" id="visualizationMode">
+                        <option value="frequency">Frequency Sphere</option>
+                        <option value="waveform">Waveform Sphere</option>
+                        <option value="particles">Particle Field</option>
+                    </select>
+                    
+                    <label class="form-label">Sensitivity:</label>
+                    <input type="range" class="form-control sensitivity-slider" id="sensitivitySlider" min="0.1" max="3" step="0.1" value="1">
+                </div>
+            </section>
 
-                <!-- Controls Panel -->
-                <div class="controls-panel">
-                    <div class="controls-row">
-                        <button class="play-btn" id="playBtn" disabled>▶</button>
-                        
-                        <div class="control-group">
-                            <label for="volumeSlider">Volume:</label>
-                            <input type="range" id="volumeSlider" min="0" max="100" value="50">
-                        </div>
-                        
-                        <div class="control-group">
-                            <label for="sensitivitySlider">Sensitivity:</label>
-                            <input type="range" id="sensitivitySlider" min="0.1" max="3" step="0.1" value="1">
+            <!-- Instructions -->
+            <section class="instructions-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h3>How to Use</h3>
+                    </div>
+                    <div class="card__body">
+                        <ol>
+                            <li>Upload an audio file (MP3, WAV, OGG, or M4A format)</li>
+                            <li>Click the play button to start audio playback</li>
+                            <li>Watch the 3D sphere react to your music in real-time</li>
+                            <li>Use your mouse to rotate and zoom the 3D view</li>
+                            <li>Adjust volume and sensitivity for the best experience</li>
+                        </ol>
+                        <div class="browser-support">
+                            <h4>Browser Requirements:</h4>
+                            <p>This visualizer requires a modern browser with Web Audio API and WebGL support. Works best in Chrome, Firefox, Safari, and Edge.</p>
                         </div>
                     </div>
                 </div>
             </section>
         </main>
+
+        <!-- Error Modal -->
+        <div class="modal hidden" id="errorModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Error</h3>
+                    <button class="modal-close" id="closeErrorModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn--primary" id="okErrorModal">OK</button>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- Load OrbitControls separately -->
     <script>
-        class AudioVisualizer {
-            constructor() {
-                this.scene = null;
-                this.camera = null;
-                this.renderer = null;
-                this.controls = null;
-                this.sphere = null;
-                this.audioContext = null;
-                this.analyser = null;
-                this.audioSource = null;
-                this.audioElement = null;
-                this.dataArray = null;
-                this.isPlaying = false;
-                this.currentFile = null;
-                this.animationId = null;
-                this.originalPositions = [];
-                this.frequencyBars = [];
-                this.isInitialized = false;
-                
-                this.sensitivity = 1.0;
-                
-                this.init();
-            }
-
-            async init() {
-                console.log('Initializing AudioVisualizer...');
-                try {
-                    await this.waitForThree();
-                    
-                    this.initThree();
-                    this.createSphere();
-                    this.setupLighting();
-                    this.setupControls();
-                    this.setupEventListeners();
-                    this.createFrequencyBars();
-                    this.animate();
-                    
-                    this.isInitialized = true;
-                    console.log('AudioVisualizer initialized successfully');
-                } catch (error) {
-                    console.error('Failed to initialize AudioVisualizer:', error);
-                    this.showError('Failed to initialize 3D visualizer: ' + error.message);
-                }
-            }
-
-            waitForThree() {
-                return new Promise((resolve, reject) => {
-                    if (window.THREE) {
-                        resolve();
-                        return;
-                    }
-                    
-                    let attempts = 0;
-                    const maxAttempts = 100; // Increased attempts
-                    
-                    const checkThree = () => {
-                        attempts++;
-                        if (window.THREE) {
-                            resolve();
-                        } else if (attempts >= maxAttempts) {
-                            reject(new Error('Three.js failed to load'));
-                        } else {
-                            setTimeout(checkThree, 100);
-                        }
-                    };
-                    
-                    checkThree();
-                });
-            }
-
-            initThree() {
-                const canvas = document.getElementById('visualizerCanvas');
-                const container = document.getElementById('canvasContainer');
-                
-                if (!canvas || !container) {
-                    throw new Error('Canvas or container not found');
-                }
-
-                this.scene = new THREE.Scene();
-                // Changed only the background color to dark for better contrast
-                this.scene.background = new THREE.Color(0x0a0a0a);
-
-                this.camera = new THREE.PerspectiveCamera(
-                    75, 
-                    container.offsetWidth / container.offsetHeight, 
-                    0.1, 
-                    1000
-                );
-                this.camera.position.set(0, 0, 5);
-
-                this.renderer = new THREE.WebGLRenderer({ 
-                    canvas: canvas, 
-                    antialias: true, 
-                    alpha: true 
-                });
-                this.renderer.setSize(container.offsetWidth, container.offsetHeight);
-                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-                window.addEventListener('resize', () => this.onWindowResize());
-            }
-
-            createSphere() {
-                const geometry = new THREE.SphereGeometry(1.5, 64, 32);
-                
-                // Changed sphere color to bright cyan for better visibility
-                const material = new THREE.MeshPhongMaterial({
-                    color: 0x00ffff,  // Bright cyan color for visibility
-                    wireframe: true,
-                    transparent: true,
-                    opacity: 0.9,
-                    emissive: 0x003333  // Subtle glow
-                });
-
-                this.sphere = new THREE.Mesh(geometry, material);
-                this.scene.add(this.sphere);
-
-                this.originalPositions = [...geometry.attributes.position.array];
-            }
-
-            setupLighting() {
-                const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
-                this.scene.add(ambientLight);
-
-                const pointLight = new THREE.PointLight(0x00ffff, 1.5, 100);
-                pointLight.position.set(10, 10, 10);
-                this.scene.add(pointLight);
-
-                const pointLight2 = new THREE.PointLight(0x64ffda, 1, 100);
-                pointLight2.position.set(-10, -10, -10);
-                this.scene.add(pointLight2);
-            }
-
-            setupControls() {
-                // Fixed OrbitControls loading issue
-                const loadOrbitControls = () => {
-                    if (window.THREE && window.THREE.OrbitControls) {
-                        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-                        this.controls.enableDamping = true;
-                        this.controls.dampingFactor = 0.05;
-                        this.controls.enableZoom = true;
-                        this.controls.autoRotate = true;
-                        this.controls.autoRotateSpeed = 0.5;
-                    } else {
-                        // Try to load OrbitControls manually if not available
-                        const script = document.createElement('script');
-                        script.src = 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/controls/OrbitControls.js';
-                        script.onload = () => {
-                            if (window.THREE.OrbitControls) {
-                                this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-                                this.controls.enableDamping = true;
-                                this.controls.dampingFactor = 0.05;
-                                this.controls.enableZoom = true;
-                                this.controls.autoRotate = true;
-                                this.controls.autoRotateSpeed = 0.5;
-                            }
-                        };
-                        document.head.appendChild(script);
-                    }
-                };
-                
-                loadOrbitControls();
-            }
-
-            createFrequencyBars() {
-                const barsContainer = document.getElementById('frequencyBars');
-                barsContainer.innerHTML = ''; // Clear existing bars
-                this.frequencyBars = []; // Reset array
-                
-                for (let i = 0; i < 64; i++) {
-                    const bar = document.createElement('div');
-                    bar.className = 'freq-bar';
-                    barsContainer.appendChild(bar);
-                    this.frequencyBars.push(bar);
-                }
-            }
-
-            setupEventListeners() {
-                const dropZone = document.getElementById('dropZone');
-                const fileInput = document.getElementById('audioFile');
-                const fileButton = document.getElementById('fileButton');
-                const playBtn = document.getElementById('playBtn');
-                const volumeSlider = document.getElementById('volumeSlider');
-                const sensitivitySlider = document.getElementById('sensitivitySlider');
-
-                // File handling
-                fileButton.addEventListener('click', () => fileInput.click());
-                fileInput.addEventListener('change', (e) => this.handleFileSelect(e.target.files[0]));
-
-                // Drag and drop
-                dropZone.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    dropZone.classList.add('drag-over');
-                });
-
-                dropZone.addEventListener('dragleave', () => {
-                    dropZone.classList.remove('drag-over');
-                });
-
-                dropZone.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    dropZone.classList.remove('drag-over');
-                    const files = e.dataTransfer.files;
-                    if (files.length > 0) {
-                        this.handleFileSelect(files[0]);
-                    }
-                });
-
-                dropZone.addEventListener('click', () => fileInput.click());
-
-                // Controls
-                playBtn.addEventListener('click', () => this.togglePlayback());
-                volumeSlider.addEventListener('input', (e) => this.setVolume(e.target.value / 100));
-                sensitivitySlider.addEventListener('input', (e) => {
-                    this.sensitivity = parseFloat(e.target.value);
-                });
-            }
-
-            async handleFileSelect(file) {
-                if (!file) return;
-
-                console.log('File selected:', file.name, file.type);
-
-                const validTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp4', 'audio/x-m4a'];
-                if (!validTypes.includes(file.type)) {
-                    this.showError('Unsupported file type. Please select an MP3, WAV, OGG, or M4A file.');
-                    return;
-                }
-
-                try {
-                    await this.loadAudioFile(file);
-                    this.showFileInfo(file);
-                    document.getElementById('playBtn').disabled = false;
-                } catch (error) {
-                    console.error('Error loading file:', error);
-                    this.showError('Error loading audio file: ' + error.message);
-                }
-            }
-
-            async loadAudioFile(file) {
-                if (this.audioElement) {
-                    this.audioElement.pause();
-                    this.audioElement = null;
-                }
-
-                this.audioElement = new Audio();
-                this.audioElement.crossOrigin = 'anonymous';
-                this.audioElement.src = URL.createObjectURL(file);
-                this.currentFile = file;
-
-                return new Promise((resolve, reject) => {
-                    this.audioElement.addEventListener('loadeddata', () => {
-                        console.log('Audio loaded successfully');
-                        try {
-                            this.setupAudioContext();
-                            resolve();
-                        } catch (error) {
-                            reject(error);
-                        }
-                    });
-
-                    this.audioElement.addEventListener('error', (e) => {
-                        console.error('Audio loading error:', e);
-                        reject(new Error('Failed to load audio file'));
-                    });
-
-                    this.audioElement.load();
-                });
-            }
-
-            setupAudioContext() {
-                try {
-                    if (!this.audioContext) {
-                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    }
-                    
-                    if (!this.analyser) {
-                        this.analyser = this.audioContext.createAnalyser();
-                        this.analyser.fftSize = 256;
-                        
-                        const bufferLength = this.analyser.frequencyBinCount;
-                        this.dataArray = new Uint8Array(bufferLength);
-                    }
-
-                    if (!this.audioSource && this.audioElement) {
-                        this.audioSource = this.audioContext.createMediaElementSource(this.audioElement);
-                        this.audioSource.connect(this.analyser);
-                        this.analyser.connect(this.audioContext.destination);
-                    }
-                } catch (error) {
-                    console.error('Error setting up audio context:', error);
-                    throw error;
-                }
-            }
-
-            async togglePlayback() {
-                if (!this.audioElement || !this.audioContext) return;
-
-                try {
-                    if (this.audioContext.state === 'suspended') {
-                        await this.audioContext.resume();
-                    }
-
-                    if (this.isPlaying) {
-                        this.audioElement.pause();
-                        this.isPlaying = false;
-                        document.getElementById('playBtn').textContent = '▶';
-                    } else {
-                        await this.audioElement.play();
-                        this.isPlaying = true;
-                        document.getElementById('playBtn').textContent = '⏸';
-                    }
-                } catch (error) {
-                    console.error('Error toggling playback:', error);
-                    this.showError('Error playing audio: ' + error.message);
-                }
-            }
-
-            setVolume(volume) {
-                if (this.audioElement) {
-                    this.audioElement.volume = volume;
-                }
-            }
-
-            showFileInfo(file) {
-                const fileName = document.getElementById('fileName');
-                const fileInfo = document.getElementById('fileInfo');
-                
-                fileName.textContent = file.name;
-                fileInfo.classList.remove('hidden');
-            }
-
-            showError(message) {
-                // Remove existing error messages
-                const existingErrors = document.querySelectorAll('.error-message');
-                existingErrors.forEach(error => error.remove());
-
-                // Create new error message
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'error-message';
-                errorDiv.textContent = message;
-                
-                const uploadSection = document.querySelector('.upload-section');
-                uploadSection.appendChild(errorDiv);
-
-                // Auto-hide after 5 seconds
-                setTimeout(() => {
-                    if (errorDiv.parentNode) {
-                        errorDiv.remove();
-                    }
-                }, 5000);
-            }
-
-            updateVisualization() {
-                if (!this.analyser || !this.dataArray || !this.sphere || !this.isPlaying) return;
-
-                this.analyser.getByteFrequencyData(this.dataArray);
-
-                // Update sphere geometry
-                const geometry = this.sphere.geometry;
-                const positions = geometry.attributes.position;
-                
-                for (let i = 0; i < positions.count; i++) {
-                    const i3 = i * 3;
-                    const originalX = this.originalPositions[i3];
-                    const originalY = this.originalPositions[i3 + 1];
-                    const originalZ = this.originalPositions[i3 + 2];
-
-                    const frequencyIndex = Math.floor((i / positions.count) * this.dataArray.length);
-                    const frequency = this.dataArray[frequencyIndex] || 0;
-                    
-                    const amplitude = (frequency / 255) * this.sensitivity * 0.3;
-                    const scaleFactor = 1 + amplitude;
-
-                    positions.setXYZ(i, originalX * scaleFactor, originalY * scaleFactor, originalZ * scaleFactor);
-                }
-
-                positions.needsUpdate = true;
-
-                // Update frequency bars
-                for (let i = 0; i < this.frequencyBars.length && i < this.dataArray.length; i++) {
-                    const frequency = this.dataArray[i];
-                    const height = (frequency / 255) * 50;
-                    this.frequencyBars[i].style.height = height + 'px';
-                }
-
-                // Update sphere color based on average frequency
-                const averageFreq = this.dataArray.reduce((a, b) => a + b, 0) / this.dataArray.length;
-                const intensity = averageFreq / 255;
-                
-                const color = new THREE.Color();
-                color.setHSL(0.5 + intensity * 0.3, 0.8, 0.5 + intensity * 0.3);
-                this.sphere.material.color = color;
-            }
-
-            animate() {
-                this.animationId = requestAnimationFrame(() => this.animate());
-
-                if (this.controls) {
-                    this.controls.update();
-                }
-
-                this.updateVisualization();
-                
-                if (this.sphere) {
-                    this.sphere.rotation.y += 0.002;
-                }
-
-                this.renderer.render(this.scene, this.camera);
-            }
-
-            onWindowResize() {
-                const container = document.getElementById('canvasContainer');
-                if (!container) return;
-
-                this.camera.aspect = container.offsetWidth / container.offsetHeight;
-                this.camera.updateProjectionMatrix();
-                this.renderer.setSize(container.offsetWidth, container.offsetHeight);
-            }
-
-            destroy() {
-                if (this.animationId) {
-                    cancelAnimationFrame(this.animationId);
-                }
-
-                if (this.audioElement) {
-                    this.audioElement.pause();
-                    this.audioElement = null;
-                }
-
-                if (this.audioContext) {
-                    this.audioContext.close();
-                }
-
-                if (this.renderer) {
-                    this.renderer.dispose();
-                }
-            }
-        }
-
-        // Initialize when DOM is loaded
-        let visualizer;
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                visualizer = new AudioVisualizer();
-            });
-        } else {
-            visualizer = new AudioVisualizer();
-        }
-
-        // Clean up on page unload
-        window.addEventListener('beforeunload', () => {
-            if (visualizer) {
-                visualizer.destroy();
-            }
-        });
+        // Load OrbitControls from the correct URL
+        const script = document.createElement('script');
+        script.src = 'https://threejs.org/examples/js/controls/OrbitControls.js';
+        script.onload = function() {
+            console.log('OrbitControls loaded successfully');
+        };
+        script.onerror = function() {
+            console.warn('OrbitControls failed to load, basic rotation will be used');
+        };
+        document.head.appendChild(script);
     </script>
+    
+    <script src="app.js"></script>
 </body>
 </html>
