@@ -23,7 +23,7 @@ A stunning 3D mesh sphere audio visualizer that transforms your music into mesme
 
 ## 🚀 Demo
 
-[Live Demo](https://sarkarsubhadip604-dotcom.github.io/3d-audio-sphere-visualizer/)
+[Live Demo](https://3d-audio-sphere.netlify.app)
 
 ## 📋 Prerequisites
 
